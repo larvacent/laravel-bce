@@ -1,0 +1,40 @@
+{
+    "name": "larva/laravel-bce",
+    "description": "This is a Laravel expansion for the Baidu Cloud.",
+    "keywords": [
+        "Larva",
+        "laravel",
+        "bce"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "ext-simplexml": "*",
+        "ext-dom": "*",
+        "ext-json": "*",
+        "ext-libxml": "*",
+        "illuminate/support": "^5.0 || ^6.0 || ^7.0",
+        "illuminate/bus": "^5.0 || ^6.0 || ^7.0",
+        "illuminate/queue": "^5.0 || ^6.0 || ^7.0",
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Larva\\Baidu\\Cloud\\": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Larva\\Baidu\\Cloud\\BceServiceProvider"
+            ],
+            "aliases": {
+                "Bce": "Larva\\Baidu\\Cloud\\Bce"
+            }
+        }
+    },
+    "prefer-stable": true
+}
