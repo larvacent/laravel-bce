@@ -8,12 +8,6 @@ This is a baidu cloud expansion for the laravel
 
 ## 接口支持
 - CDN
-- 移动推送
-- 邮件推送
-- DNS
-- 域名
-- HTTPDNS
-- MNS
 
 ## 环境需求
 
