@@ -170,7 +170,7 @@ class Cdn extends BaseClient
      * 修改回源
      * @param string $domain
      * @param array $origin
-     * @param string $host 回源HOST
+     * @param string|null $host 回源HOST
      * @return array
      */
     public function setDomainOrigin($domain, $origin, $host = null)
