@@ -42,16 +42,15 @@ class Cdn extends BaseClient
 
     /**
      * 查询用户名下所有域名
-     * @param string $rule
+     * @param string|null $rule
      * @param string $status
      * @return array
      */
-    public function userDomains($rule, $status = 'ALL')
+    public function userDomains($rule = null, $status = 'ALL')
     {
-        return $this->get('/v2/user/domains', [
-            'status' => $status,
-            'rule' => $rule,
-        ]);
+        $query = ['status' => $status];
+        if ($rule) $query['rule'] = $rule;
+        return $this->getJSON('/v2/user/domains', $query);
     }
 
     /**
@@ -60,7 +59,7 @@ class Cdn extends BaseClient
      */
     public function domains()
     {
-        return $this->get('/v2/domain');
+        return $this->getJSON('/v2/domain');
     }
 
     /**
@@ -70,7 +69,7 @@ class Cdn extends BaseClient
      */
     public function domainValid($domain)
     {
-        return $this->get("/v2/domain/{$domain}/valid");
+        return $this->getJSON("/v2/domain/{$domain}/valid");
     }
 
     /**
@@ -83,7 +82,7 @@ class Cdn extends BaseClient
      */
     public function domainCreate($domain, $origin, $defaultHost, $form)
     {
-        return $this->put("/v2/domain/{$domain}", [
+        return $this->putJSON("/v2/domain/{$domain}", [
             'origin' => $origin,
             'defaultHost' => $defaultHost,
             'form' => $form
@@ -97,7 +96,7 @@ class Cdn extends BaseClient
      */
     public function domainEnable($domain)
     {
-        return $this->post("/v2/domain/{$domain}", [
+        return $this->postJSON("/v2/domain/{$domain}", [
             'enable' => ''
         ]);
     }
@@ -109,7 +108,7 @@ class Cdn extends BaseClient
      */
     public function domainDisable($domain)
     {
-        return $this->post("/v2/domain/{$domain}", [
+        return $this->postJSON("/v2/domain/{$domain}", [
             'disable' => ''
         ]);
     }
@@ -150,7 +149,7 @@ class Cdn extends BaseClient
      * @param array $cacheTTL
      * @return array
      */
-    public function cacheTTL($domain,$cacheTTL)
+    public function cacheTTL($domain, $cacheTTL)
     {
         return $this->putJSON("/v2/domain/{$domain}/config", [
             'cacheTTL' => $cacheTTL

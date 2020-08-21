@@ -62,15 +62,21 @@ class HttpStack
         $timestamp = gmdate('Y-m-d\TH:i:s\Z');
         $expirationPeriodInSeconds = 1800;
         $authString = "bce-auth-v1/{$accessId}/{$timestamp}/{$expirationPeriodInSeconds}";
-
-        // 任务二：创建规范请求(canonicalRequest)，确定签名头域(signedHeaders)
-        $method = $request->getMethod();
         $headers = ['x-bce-date' => $timestamp];
+        foreach ($request->getHeaders() as $name => $values) {
+            foreach ($values as $value) {
+                $headers[$name] = $value;
+            }
+        }
+
         $canonicalURI = $this->getCanonicalURIPath($request->getUri()->getPath());
-        $canonicalQueryString = $this->getCanonicalQueryString($request->getUri()->getQuery());
+        $canonicalQueryString = $this->getCanonicalQueryString(\GuzzleHttp\Psr7\parse_query($request->getUri()->getQuery()));
+
         $canonicalHeaders = $this->getCanonicalHeaders($headers);
-        $canonicalRequest = $method . "\n" . $canonicalURI . "\n" . $canonicalQueryString . "\n" . $canonicalHeaders;
-        $signedHeaders = 'x-bce-date'; // 可根据Header部分确定签名头域（signedHeaders)。
+        $canonicalRequest = $request->getMethod() . "\n" . $canonicalURI . "\n" . $canonicalQueryString . "\n" . $canonicalHeaders;
+        $headersToSign = array_keys($headers);
+        ksort($headersToSign);
+        $signedHeaders = strtolower(trim(implode(";", $headersToSign)));
 
         // 任务三：生成派生签名密钥(signingKey)
         $signingKey = hash_hmac('sha256', $authString, $this->config['accessKey']);
@@ -123,16 +129,13 @@ class HttpStack
     }
 
     /**
-     * @param string $queryString
+     * @param array $params
      * @return string
      */
-    private function getCanonicalQueryString($queryString)
+    private function getCanonicalQueryString($params)
     {
-        //参数排序
-        $params = \GuzzleHttp\Psr7\parse_query($queryString);
         ksort($params);
-        $query = http_build_query($params, null, '&', PHP_QUERY_RFC3986);
-        return $this->percentEncode($query);
+        return http_build_query($params, null, '&', PHP_QUERY_RFC3986);
     }
 
     /**
@@ -156,18 +159,5 @@ class HttpStack
         }
         sort($headerStrings);
         return implode("\n", $headerStrings);
-    }
-
-    /**
-     * @param string $str
-     * @return string|string[]|null
-     */
-    private function percentEncode($str)
-    {
-        $res = urlencode($str);
-        $res = preg_replace('/\+/', '%20', $res);
-        $res = preg_replace('/\*/', '%2A', $res);
-        $res = preg_replace('/%7E/', '~', $res);
-        return $res;
     }
 }
