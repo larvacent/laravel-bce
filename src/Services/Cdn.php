@@ -75,18 +75,34 @@ class Cdn extends BaseClient
     /**
      * 创建一个加速域名
      * @param string $domain
-     * @param $origin
-     * @param $defaultHost
-     * @param $form
+     * @param array $origin
+     * @param string $defaultHost
+     * @param string $form 业务类型
      * @return array
      */
-    public function domainCreate($domain, $origin, $defaultHost, $form)
+    public function domainCreate($domain, $origin, $defaultHost = null, $form = 'default')
     {
-        return $this->putJSON("/v2/domain/{$domain}", [
-            'origin' => $origin,
-            'defaultHost' => $defaultHost,
-            'form' => $form
-        ]);
+        $params = ['origin' => $origin, 'form' => $form];
+        if ($defaultHost) $query['defaultHost'] = $defaultHost;
+        return $this->putJSON("/v2/domain/{$domain}", $params);
+    }
+
+    /**
+     * 创建一个加速域名
+     * @param string $domain
+     * @param array $origin
+     * @param string $defaultHost
+     * @param string $form 业务类型
+     * @return array
+     */
+    public function domainCreateByPeer($domain, $peer)
+    {
+        $params = [
+            [
+                'peer' => $peer
+            ]
+        ];
+        return $this->domainCreate($domain, $params);
     }
 
     /**
@@ -96,9 +112,7 @@ class Cdn extends BaseClient
      */
     public function domainEnable($domain)
     {
-        return $this->postJSON("/v2/domain/{$domain}", [
-            'enable' => ''
-        ]);
+        return $this->postJSON("/v2/domain/{$domain}?enable=1");
     }
 
     /**
@@ -108,9 +122,7 @@ class Cdn extends BaseClient
      */
     public function domainDisable($domain)
     {
-        return $this->postJSON("/v2/domain/{$domain}", [
-            'disable' => ''
-        ]);
+        return $this->postJSON("/v2/domain/{$domain}?disable=1");
     }
 
     /**
@@ -130,7 +142,7 @@ class Cdn extends BaseClient
      */
     public function domainICP($domain)
     {
-        return $this->get("/v2/domain/{$domain}/icp");
+        return $this->getJSON("/v2/domain/{$domain}/icp");
     }
 
     /**
@@ -140,7 +152,33 @@ class Cdn extends BaseClient
      */
     public function getDomainConfig($domain)
     {
-        return $this->get("/v2/domain/{$domain}/config");
+        return $this->getJSON("/v2/domain/{$domain}/config");
+    }
+
+    /**
+     * 修改域名设置
+     * @param string $domain
+     * @param array $config
+     * @return array
+     */
+    public function setDomainConfig($domain, $config)
+    {
+        return $this->getJSON("/v2/domain/{$domain}/config");
+    }
+
+    /**
+     * 修改回源
+     * @param string $domain
+     * @param array $origin
+     * @param string $host 回源HOST
+     * @return array
+     */
+    public function setDomainOrigin($domain, $origin, $host)
+    {
+        return $this->setDomainConfig($domain, [
+            'origin' => $origin,
+            'defaultHost' => $host
+        ]);
     }
 
     /**
@@ -149,7 +187,7 @@ class Cdn extends BaseClient
      * @param array $cacheTTL
      * @return array
      */
-    public function cacheTTL($domain, $cacheTTL)
+    public function setCacheTTL($domain, $cacheTTL)
     {
         return $this->putJSON("/v2/domain/{$domain}/config", [
             'cacheTTL' => $cacheTTL
