@@ -25,7 +25,7 @@ class BceManage
     protected $app;
 
     /**
-     * @var string 阿里云AccessKey ID
+     * @var string AccessKey ID
      */
     protected $accessId;
 
@@ -149,7 +149,16 @@ class BceManage
      */
     protected function callCustomCreator(array $config)
     {
-        $driver = $this->customCreators[$config['driver']]($this->app, $config);
-        return $driver;
+        return $this->customCreators[$config['driver']]($this->app, $config);
+    }
+
+    /**
+     * 创建CDN服务
+     * @param array $config
+     * @return BceInterface
+     */
+    public function createCdnService(array $config)
+    {
+        return new Services\Cdn(['accessId' => $config['access_id'], 'accessKey' => $config['access_key']]);
     }
 }

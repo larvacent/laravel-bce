@@ -13,7 +13,7 @@ use GuzzleHttp\HandlerStack;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class BaseService
+ * Class BaseClient
  * @author Tongle Xu <xutongle@gmail.com>
  */
 class BaseClient implements BceInterface
@@ -28,10 +28,13 @@ class BaseClient implements BceInterface
      */
     protected $accessKey;
 
+    /**
+     * @var float
+     */
     public $timeout = 5.0;
 
     /**
-     * BaseService constructor.
+     * BaseClient constructor.
      * @param array $config
      */
     public function __construct($config = [])
@@ -85,8 +88,8 @@ class BaseClient implements BceInterface
     {
         $stack = HandlerStack::create();
         $middleware = new HttpStack([
-            'accessKeyId' => $this->accessId,
-            'accessSecret' => $this->accessKey,
+            'accessId' => $this->accessId,
+            'accessKey' => $this->accessKey,
         ]);
         $stack->push($middleware);
         return $stack;
@@ -145,10 +148,13 @@ class BaseClient implements BceInterface
      */
     protected function post($endpoint, $params = [], $headers = [])
     {
-        return $this->request('post', $endpoint, [
-            'headers' => $headers,
-            'form_params' => $params,
-        ]);
+        $options = ['headers' => $headers];
+        if (!is_array($params)) {
+            $options['body'] = $params;
+        } else {
+            $options['form_params'] = $params;
+        }
+        return $this->request('post', $endpoint, $options);
     }
 
     /**
@@ -161,10 +167,11 @@ class BaseClient implements BceInterface
      */
     protected function postJSON($endpoint, $params = [], $headers = [])
     {
-        return $this->request('post', $endpoint, [
-            'headers' => $headers,
-            'json' => $params,
-        ]);
+        $options = ['headers' => $headers];
+        $options['headers']['Accept'] = 'application/json';
+        $options['headers']['Content-Type'] = 'application/json';
+        $options['body'] = json_encode($params, 320);
+        return $this->request('post', $endpoint, $options);
     }
 
     /**
@@ -278,22 +285,5 @@ class BaseClient implements BceInterface
             return 'xml';
         }
         return null;
-    }
-
-    /**
-     * 通过__call转发请求
-     * @param string $name 方法名
-     * @param array $arguments 参数
-     * @return array
-     */
-    public function __call($name, $arguments)
-    {
-        $action = ucfirst($name);
-        $params = [];
-        if (is_array($arguments) && !empty($arguments)) {
-            $params = (array)$arguments[0];
-        }
-        $params['Action'] = $action;
-        return $this->post('', $params);
     }
 }

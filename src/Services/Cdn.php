@@ -33,10 +33,19 @@ class Cdn extends BaseClient
     {
         $stack = HandlerStack::create();
         $middleware = new HttpStack([
-            'accessKeyId' => $this->accessId,
-            'accessSecret' => $this->accessKey,
+            'accessId' => $this->accessId,
+            'accessKey' => $this->accessKey,
         ]);
         $stack->push($middleware);
         return $stack;
+    }
+
+    /**
+     * 获取CDN域名
+     * @return array
+     */
+    public function domains()
+    {
+        return $this->get('/v2/domain');
     }
 }

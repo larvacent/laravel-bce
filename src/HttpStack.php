@@ -8,7 +8,6 @@
 
 namespace Larva\Baidu\Cloud;
 
-use BaiduBce\Util\HttpUtils;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -19,8 +18,8 @@ class HttpStack
 {
     /** @var array Configuration settings */
     private $config = [
-        'accessKeyId' => '',
-        'accessSecret' => ''
+        'accessId' => '',
+        'accessKey' => ''
     ];
 
     /**
@@ -59,7 +58,7 @@ class HttpStack
     private function onBefore(RequestInterface $request)
     {
         // 任务一：创建前缀字符串(authStringPrefix)
-        $accessId = $this->config['accessKeyId'];
+        $accessId = $this->config['accessId'];
         $timestamp = gmdate('Y-m-d\TH:i:s\Z');
         $expirationPeriodInSeconds = 1800;
         $authString = `bce-auth-v1/{$accessId}/{$timestamp}/{$expirationPeriodInSeconds}`;
@@ -75,7 +74,7 @@ class HttpStack
         $signedHeaders = 'x-bce-date'; // 可根据Header部分确定签名头域（signedHeaders)。签名头域是指签名算法中涉及到的HTTP头域列表。
 
         // 任务三：生成派生签名密钥(signingKey)
-        $signingKey = hash_hmac('sha256', $authString, $this->config['accessSecret']);
+        $signingKey = hash_hmac('sha256', $authString, $this->config['accessKey']);
 
         // 任务四：生成签名摘要(signature)，并拼接最终的认证字符串(authorization)
         $signature = hash_hmac('sha256', $canonicalRequest, $signingKey);
