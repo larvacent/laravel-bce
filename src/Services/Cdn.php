@@ -143,4 +143,28 @@ class Cdn extends BaseClient
     {
         return $this->get("/v2/domain/{$domain}/config");
     }
+
+    /**
+     * 提交purge任务
+     * @param array $tasks
+     * @return array
+     */
+    public function cachePurge(array $tasks)
+    {
+        return $this->post("/v2/cache/purge", [
+            'tasks' => $tasks
+        ]);
+    }
+
+    /**
+     * 提交prefetch任务
+     * @param array $tasks
+     * @return array
+     */
+    public function cachePrefetch($tasks)
+    {
+        return $this->post("/v2/cache/prefetch", [
+            'tasks' => $tasks
+        ]);
+    }
 }

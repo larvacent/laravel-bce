@@ -16,10 +16,10 @@ use Larva\Baidu\Cloud\Bce;
 use Larva\Baidu\Cloud\Services\Cdn;
 
 /**
- * CDN 资源预热
+ * Class CdnPushObjectCacheJob
  * @author Tongle Xu <xutongle@gmail.com>
  */
-class CdnRefreshObjectCachesJob implements ShouldQueue
+class CdnPushObjectCacheJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable;
 
@@ -68,7 +68,8 @@ class CdnRefreshObjectCachesJob implements ShouldQueue
             $tasks = [];
             foreach ($tasks as $task) {
                 $tasks[] = [
-                    'url' => $task
+                    'url' => $task,
+                    'type' => $this->objectType
                 ];
             }
             /** @var Cdn $cdn */
