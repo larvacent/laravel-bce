@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * Class Bce
+ * @mixin BceManage
  * @author Tongle Xu <xutongle@gmail.com>
  */
 class Bce extends Facade
