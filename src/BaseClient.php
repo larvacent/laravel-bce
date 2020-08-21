@@ -139,6 +139,43 @@ class BaseClient implements BceInterface
     }
 
     /**
+     * Make a put request.
+     *
+     * @param string $endpoint
+     * @param array $params
+     * @param array $headers
+     * @return array
+     */
+    protected function put($endpoint, $params = [], $headers = [])
+    {
+        $options = ['headers' => $headers];
+        if (!is_array($params)) {
+            $options['body'] = $params;
+        } else {
+            $options['form_params'] = $params;
+        }
+        return $this->request('put', $endpoint, $options);
+    }
+
+    /**
+     * Make a delete request.
+     * @param string $endpoint
+     * @param array $params
+     * @param array $headers
+     * @return array|mixed
+     */
+    protected function delete($endpoint, $params = [], $headers = [])
+    {
+        $options = ['headers' => $headers];
+        if (!is_array($params)) {
+            $options['body'] = $params;
+        } else {
+            $options['form_params'] = $params;
+        }
+        return $this->request('delete', $endpoint, $options);
+    }
+
+    /**
      * Make a post request.
      *
      * @param string $endpoint

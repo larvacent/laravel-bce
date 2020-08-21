@@ -41,11 +41,52 @@ class Cdn extends BaseClient
     }
 
     /**
-     * 获取CDN域名
+     * 查询用户名下所有域名
+     * @param string $rule
+     * @param string $status
+     * @return array
+     */
+    public function userDomains($rule, $status = 'ALL')
+    {
+        return $this->get('/v2/user/domains', [
+            'status' => $status,
+            'rule' => $rule,
+        ]);
+    }
+
+    /**
+     * 查询用户的域名列表
      * @return array
      */
     public function domains()
     {
         return $this->get('/v2/domain');
+    }
+
+    /**
+     * 查询域名是否可以被添加
+     * @param string $domain
+     * @return array
+     */
+    public function domainValid($domain)
+    {
+        return $this->get("/v2/domain/{$domain}/valid");
+    }
+
+    /**
+     * 创建一个加速域名
+     * @param $domain
+     * @param $origin
+     * @param $defaultHost
+     * @param $form
+     * @return array
+     */
+    public function domainCreate($domain, $origin, $defaultHost, $form)
+    {
+        return $this->put("/v2/domain/{$domain}", [
+            'origin' => $origin,
+            'defaultHost' => $defaultHost,
+            'form' => $form
+        ]);
     }
 }
