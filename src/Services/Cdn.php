@@ -75,7 +75,7 @@ class Cdn extends BaseClient
 
     /**
      * 创建一个加速域名
-     * @param $domain
+     * @param string $domain
      * @param $origin
      * @param $defaultHost
      * @param $form
@@ -88,5 +88,59 @@ class Cdn extends BaseClient
             'defaultHost' => $defaultHost,
             'form' => $form
         ]);
+    }
+
+    /**
+     * 启用域名加速
+     * @param string $domain
+     * @return array
+     */
+    public function domainEnable($domain)
+    {
+        return $this->post("/v2/domain/{$domain}", [
+            'enable' => ''
+        ]);
+    }
+
+    /**
+     * 禁用域名加速
+     * @param string $domain
+     * @return array
+     */
+    public function domainDisable($domain)
+    {
+        return $this->post("/v2/domain/{$domain}", [
+            'disable' => ''
+        ]);
+    }
+
+    /**
+     * 删除域名加速
+     * @param string $domain
+     * @return array|mixed
+     */
+    public function domainDelete($domain)
+    {
+        return $this->delete("/v2/domain/{$domain}");
+    }
+
+    /**
+     * 查询域名是否备案
+     * @param string $domain
+     * @return array|mixed
+     */
+    public function domainICP($domain)
+    {
+        return $this->get("/v2/domain/{$domain}/icp");
+    }
+
+    /**
+     * 获取指定加速域名配置的基本信息
+     * @param string $domain
+     * @return array
+     */
+    public function getDomainConfig($domain)
+    {
+        return $this->get("/v2/domain/{$domain}/config");
     }
 }

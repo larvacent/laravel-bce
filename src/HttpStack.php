@@ -61,39 +61,113 @@ class HttpStack
         $accessId = $this->config['accessId'];
         $timestamp = gmdate('Y-m-d\TH:i:s\Z');
         $expirationPeriodInSeconds = 1800;
-        $authString = `bce-auth-v1/{$accessId}/{$timestamp}/{$expirationPeriodInSeconds}`;
+        $authString = "bce-auth-v1/{$accessId}/{$timestamp}/{$expirationPeriodInSeconds}";
 
         // 任务二：创建规范请求(canonicalRequest)，确定签名头域(signedHeaders)
         $method = $request->getMethod();
-        $canonicalURI = $request->getUri();
-        $canonicalQueryString = $request->getUri()->getQuery();
-
-        $canonicalHeaders = 'x-bce-date:' . $timestamp;
+        $headers = ['x-bce-date' => $timestamp];
+        $canonicalURI = $this->getCanonicalURIPath($request->getUri()->getPath());
+        $canonicalQueryString = $this->getCanonicalQueryString($request->getUri()->getQuery());
+        $canonicalHeaders = $this->getCanonicalHeaders($headers);
         $canonicalRequest = $method . "\n" . $canonicalURI . "\n" . $canonicalQueryString . "\n" . $canonicalHeaders;
-        $canonicalRequest = $this->percentEncode(($canonicalRequest));
-        $signedHeaders = 'x-bce-date'; // 可根据Header部分确定签名头域（signedHeaders)。签名头域是指签名算法中涉及到的HTTP头域列表。
+        $signedHeaders = 'x-bce-date'; // 可根据Header部分确定签名头域（signedHeaders)。
 
         // 任务三：生成派生签名密钥(signingKey)
         $signingKey = hash_hmac('sha256', $authString, $this->config['accessKey']);
-
         // 任务四：生成签名摘要(signature)，并拼接最终的认证字符串(authorization)
         $signature = hash_hmac('sha256', $canonicalRequest, $signingKey);
-
-        $authorization = "$authString/$signedHeaders/$signature";
-
-        $headers = [
-            'x-bce-date' => $timestamp,
-            'Authorization' => $authorization
-        ];
+        $headers['Authorization'] = "$authString/$signedHeaders/$signature";
         return \GuzzleHttp\Psr7\modify_request($request, ['set_headers' => $headers]);
     }
 
     /**
-     * @param string $str
+     * Normalize a string for use in url path. The algorithm is:
+     * <p>
+     *
+     * <ol>
+     *   <li>Normalize the string</li>
+     *   <li>replace all "%2F" with "/"</li>
+     *   <li>replace all "//" with "/%2F"</li>
+     * </ol>
+     *
+     * <p>
+     * Bos object key can contain arbitrary characters, which may result double
+     * slash in the url path. Apache Http client will replace "//" in the path
+     * with a single '/', which makes the object key incorrect. Thus we replace
+     * "//" with "/%2F" here.
+     *
+     * @param $path string the path string to normalize.
+     * @return string the normalized path string.
+     * @see #normalize(string)
+     */
+    private function urlEncodeExceptSlash($path)
+    {
+        return str_replace("%2F", "/", rawurlencode($path));
+    }
+
+    /**
+     * @param $path string
      * @return string
      */
-    protected function percentEncode($str)
+    private function getCanonicalURIPath($path)
     {
-        return str_replace("%2F", "/", rawurlencode($str));
+        if (empty($path)) {
+            return '/';
+        } else {
+            if ($path[0] == '/') {
+                return $this->urlEncodeExceptSlash($path);
+            } else {
+                return '/' . $this->urlEncodeExceptSlash($path);
+            }
+        }
+    }
+
+    /**
+     * @param string $queryString
+     * @return string
+     */
+    private function getCanonicalQueryString($queryString)
+    {
+        //参数排序
+        $params = \GuzzleHttp\Psr7\parse_query($queryString);
+        ksort($params);
+        $query = http_build_query($params, null, '&', PHP_QUERY_RFC3986);
+        return $this->percentEncode($query);
+    }
+
+    /**
+     * @param $headers array
+     * @return string
+     */
+    private function getCanonicalHeaders($headers)
+    {
+        if (count($headers) == 0) {
+            return '';
+        }
+        $headerStrings = [];
+        foreach ($headers as $k => $v) {
+            if ($k === null) {
+                continue;
+            }
+            if ($v === null) {
+                $v = '';
+            }
+            $headerStrings[] = rawurlencode(strtolower(trim($k))) . ':' . rawurlencode(trim($v));
+        }
+        sort($headerStrings);
+        return implode("\n", $headerStrings);
+    }
+
+    /**
+     * @param string $str
+     * @return string|string[]|null
+     */
+    private function percentEncode($str)
+    {
+        $res = urlencode($str);
+        $res = preg_replace('/\+/', '%20', $res);
+        $res = preg_replace('/\*/', '%2A', $res);
+        $res = preg_replace('/%7E/', '~', $res);
+        return $res;
     }
 }
