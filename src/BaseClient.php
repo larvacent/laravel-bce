@@ -139,6 +139,20 @@ class BaseClient implements BceInterface
     }
 
     /**
+     * Make a get request.
+     *
+     * @param string $endpoint
+     * @param array $query
+     * @param array $headers
+     * @return array
+     */
+    protected function getJSON($endpoint, $query = [], $headers = [])
+    {
+        $headers['Accept'] = 'application/json';
+        return $this->get($endpoint,$query,$headers);
+    }
+
+    /**
      * Make a put request.
      *
      * @param string $endpoint
@@ -154,6 +168,23 @@ class BaseClient implements BceInterface
         } else {
             $options['form_params'] = $params;
         }
+        return $this->request('put', $endpoint, $options);
+    }
+
+    /**
+     * Make a post request.
+     *
+     * @param string $endpoint
+     * @param array $params
+     * @param array $headers
+     * @return array
+     */
+    protected function putJSON($endpoint, $params = [], $headers = [])
+    {
+        $options = ['headers' => $headers];
+        $options['headers']['Accept'] = 'application/json';
+        $options['headers']['Content-Type'] = 'application/json';
+        $options['body'] = json_encode($params, 320);
         return $this->request('put', $endpoint, $options);
     }
 

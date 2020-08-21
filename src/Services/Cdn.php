@@ -145,6 +145,19 @@ class Cdn extends BaseClient
     }
 
     /**
+     * 修改加速域名文件类型的缓存策略
+     * @param string $domain
+     * @param array $cacheTTL
+     * @return array
+     */
+    public function cacheTTL($domain,$cacheTTL)
+    {
+        return $this->putJSON("/v2/domain/{$domain}/config", [
+            'cacheTTL' => $cacheTTL
+        ]);
+    }
+
+    /**
      * 提交purge任务
      * @param array $tasks
      * @return array
@@ -167,4 +180,5 @@ class Cdn extends BaseClient
             'tasks' => $tasks
         ]);
     }
+
 }
