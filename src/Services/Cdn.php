@@ -163,7 +163,7 @@ class Cdn extends BaseClient
      */
     public function setDomainConfig($domain, $config)
     {
-        return $this->getJSON("/v2/domain/{$domain}/config");
+        return $this->putJSON("/v2/domain/{$domain}/config", $config);
     }
 
     /**
@@ -173,12 +173,11 @@ class Cdn extends BaseClient
      * @param string $host 回源HOST
      * @return array
      */
-    public function setDomainOrigin($domain, $origin, $host)
+    public function setDomainOrigin($domain, $origin, $host = null)
     {
-        return $this->setDomainConfig($domain, [
-            'origin' => $origin,
-            'defaultHost' => $host
-        ]);
+        $params = ['origin' => $origin, 'defaultHost' => $domain];
+        if ($host) $query['defaultHost'] = $host;
+        return $this->putJSON("/v2/domain/{$domain}/config?origin=1", $params);
     }
 
     /**
@@ -189,7 +188,7 @@ class Cdn extends BaseClient
      */
     public function setCacheTTL($domain, $cacheTTL)
     {
-        return $this->putJSON("/v2/domain/{$domain}/config", [
+        return $this->putJSON("/v2/domain/{$domain}/config?cacheTTL=1", [
             'cacheTTL' => $cacheTTL
         ]);
     }
