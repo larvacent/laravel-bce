@@ -45,4 +45,58 @@ class Aip extends BaseClient
         $stack->push($middleware);
         return $stack;
     }
+
+    /**
+     * 文章标签接口
+     * @param $title
+     * @param $content
+     * @return array
+     */
+    public function keyword($title, $content)
+    {
+        return $this->postJSON('/rpc/2.0/nlp/v1/keyword?charset=UTF-8', [
+            'title' => $title,
+            'content' => $content
+        ]);
+    }
+
+    /**
+     * 文章分类接口
+     * @param string $title
+     * @param string $content
+     * @return array
+     */
+    public function topic($title, $content)
+    {
+        return $this->postJSON('/rpc/2.0/nlp/v1/topic?charset=UTF-8', [
+            'title' => $title,
+            'content' => $content
+        ]);
+    }
+
+    /**
+     * 文本纠错
+     * @param string $text
+     * @return array
+     */
+    public function ecnet($text)
+    {
+        return $this->postJSON('/rpc/2.0/nlp/v1/ecnet?charset=UTF-8', [
+            'text' => $text
+        ]);
+    }
+
+    /**
+     * 新闻摘要接口
+     * @param string $content
+     * @param string|null $title
+     * @param int $maxSummaryLen 此数值将作为摘要结果的最大长度。例如：原文长度1000字，本参数设置为150，则摘要结果的最大长度是150字；推荐最优区间：200-500字
+     * @return array
+     */
+    public function newsSummary($content, $maxSummaryLen = 200, $title = null)
+    {
+        $params = ['content' => $content, 'max_summary_len' => $maxSummaryLen];
+        if ($title) $query['title'] = $title;
+        return $this->postJSON('/rpc/2.0/nlp/v1/topic?charset=UTF-8', $params);
+    }
 }
