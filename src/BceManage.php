@@ -51,7 +51,7 @@ class BceManage
     /**
      * Create a new filesystem manager instance.
      *
-     * @param  \Illuminate\Contracts\Foundation\Application $app
+     * @param \Illuminate\Contracts\Foundation\Application $app
      * @return void
      */
     public function __construct($app)
@@ -64,16 +64,16 @@ class BceManage
     /**
      * Get the bce service configuration.
      *
-     * @param  string $name
+     * @param string $name
      * @return array
      */
     protected function getConfig($name)
     {
         $config = $this->app['config']["bce.services.{$name}"];
-        if (empty ($config['access_id'])) {
+        if (isset($config['access_id']) && empty ($config['access_id'])) {
             $config['access_id'] = $this->accessId;
         }
-        if (empty ($config['access_key'])) {
+        if (isset($config['access_key']) && empty ($config['access_key'])) {
             $config['access_key'] = $this->accessKey;
         }
         return $config;
@@ -82,7 +82,7 @@ class BceManage
     /**
      * Attempt to get the disk from the local cache.
      *
-     * @param  string $name
+     * @param string $name
      * @return BceInterface
      */
     public function get($name)
@@ -93,8 +93,8 @@ class BceManage
     /**
      * Set the given service instance.
      *
-     * @param  string $name
-     * @param  mixed $service
+     * @param string $name
+     * @param mixed $service
      * @return $this
      */
     public function set($name, $service)
@@ -106,7 +106,7 @@ class BceManage
     /**
      * Resolve the given disk.
      *
-     * @param  string $name
+     * @param string $name
      * @return BceInterface
      *
      * @throws \InvalidArgumentException
@@ -131,8 +131,8 @@ class BceManage
     /**
      * Register a custom driver creator Closure.
      *
-     * @param  string $driver
-     * @param  \Closure $callback
+     * @param string $driver
+     * @param \Closure $callback
      * @return $this
      */
     public function extend($driver, Closure $callback)
@@ -144,7 +144,7 @@ class BceManage
     /**
      * Call a custom driver creator.
      *
-     * @param  array $config
+     * @param array $config
      * @return BceInterface
      */
     protected function callCustomCreator(array $config)
@@ -160,5 +160,15 @@ class BceManage
     public function createCdnService(array $config)
     {
         return new Services\Cdn(['accessId' => $config['access_id'], 'accessKey' => $config['access_key']]);
+    }
+
+    /**
+     * 创建AIP服务
+     * @param array $config
+     * @return Services\Aip
+     */
+    public function createAipService(array $config)
+    {
+        return new Services\Aip(['accessId' => $config['app_id'], 'accessKey' => $config['app_key'], 'secretKey' => $config['secret_key']]);
     }
 }
