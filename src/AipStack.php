@@ -60,6 +60,7 @@ class AipStack
     {
         $params = \GuzzleHttp\Psr7\parse_query($request->getUri()->getQuery());
         $params['access_token'] =$this->getAccessToken();
+        $params['charset'] = 'UTF-8';
         $body = http_build_query($params, '', '&');
         return \GuzzleHttp\Psr7\modify_request($request, ['query' => $body]);
     }

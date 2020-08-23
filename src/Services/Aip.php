@@ -54,7 +54,7 @@ class Aip extends BaseClient
      */
     public function keyword($title, $content)
     {
-        return $this->postJSON('/rpc/2.0/nlp/v1/keyword?charset=UTF-8', [
+        return $this->postJSON('/rpc/2.0/nlp/v1/keyword', [
             'title' => $title,
             'content' => $content
         ]);
@@ -68,7 +68,7 @@ class Aip extends BaseClient
      */
     public function topic($title, $content)
     {
-        return $this->postJSON('/rpc/2.0/nlp/v1/topic?charset=UTF-8', [
+        return $this->postJSON('/rpc/2.0/nlp/v1/topic', [
             'title' => $title,
             'content' => $content
         ]);
@@ -81,7 +81,7 @@ class Aip extends BaseClient
      */
     public function ecnet($text)
     {
-        return $this->postJSON('/rpc/2.0/nlp/v1/ecnet?charset=UTF-8', [
+        return $this->postJSON('/rpc/2.0/nlp/v1/ecnet', [
             'text' => $text
         ]);
     }
@@ -97,6 +97,6 @@ class Aip extends BaseClient
     {
         $params = ['content' => $content, 'max_summary_len' => $maxSummaryLen];
         if ($title) $query['title'] = $title;
-        return $this->postJSON('/rpc/2.0/nlp/v1/topic?charset=UTF-8', $params);
+        return $this->postJSON('/rpc/2.0/nlp/v1/topic', $params);
     }
 }
