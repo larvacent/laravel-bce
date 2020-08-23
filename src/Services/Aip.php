@@ -48,12 +48,13 @@ class Aip extends BaseClient
 
     /**
      * 文章标签接口
-     * @param $title
-     * @param $content
+     * @param string $title
+     * @param string $content
      * @return array
      */
-    public function keyword($title, $content)
+    public function keyword($title, $content = null)
     {
+        if (!$content) $content = $title;
         return $this->postJSON('/rpc/2.0/nlp/v1/keyword', [
             'title' => $title,
             'content' => $content
@@ -68,6 +69,7 @@ class Aip extends BaseClient
      */
     public function topic($title, $content)
     {
+        if (!$content) $content = $title;
         return $this->postJSON('/rpc/2.0/nlp/v1/topic', [
             'title' => $title,
             'content' => $content
