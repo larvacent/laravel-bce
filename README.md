@@ -9,6 +9,7 @@ This is a baidu cloud expansion for the laravel
 ## 接口支持
 - CDN
 - 自然语言处理 AIP
+- SMS
 
 ## 环境需求
 
