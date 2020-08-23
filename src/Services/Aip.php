@@ -101,4 +101,15 @@ class Aip extends BaseClient
         if ($title) $query['title'] = $title;
         return $this->postJSON('/rpc/2.0/nlp/v1/topic', $params);
     }
+
+    /**
+     * 文本审核
+     * @param string $text
+     * @return array
+     */
+    public function textCensor($text)
+    {
+        return $this->postJSON('/rest/2.0/solution/v1/text_censor/v2/user_defined', ['text'=>$text]);
+    }
+
 }
