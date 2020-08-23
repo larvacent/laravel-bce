@@ -109,7 +109,39 @@ class Aip extends BaseClient
      */
     public function textCensor($text)
     {
-        return $this->postJSON('/rest/2.0/solution/v1/text_censor/v2/user_defined', ['text'=>$text]);
+        return $this->post('/rest/2.0/solution/v1/text_censor/v2/user_defined', ['text' => $text]);
     }
 
+    /**
+     * 图片审核
+     * @param array $params
+     * @return array
+     */
+    public function imgCensor($params)
+    {
+        if (!$params['imgType']) $params['imgType'] = 0;
+        return $this->post('/rest/2.0/solution/v1/img_censor/v2/user_defined', $params);
+    }
+
+    /**
+     * 语音审核
+     * @param array $params
+     * @return array
+     */
+    public function voiceCensor($params)
+    {
+        if (!$params['rawText']) $params['rawText'] = true;
+        if (!$params['split']) $params['split'] = false;
+        return $this->post('/rest/2.0/solution/v1/voice_censor/v2/user_defined', $params);
+    }
+
+    /**
+     * 短视频审核
+     * @param array $params
+     * @return array
+     */
+    public function videoCensor($params)
+    {
+        return $this->post('/rest/2.0/solution/v1/video_censor/v2/user_defined', $params);
+    }
 }
