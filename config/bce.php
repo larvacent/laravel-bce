@@ -16,6 +16,11 @@ return [
             'access_id' => env('BCE_ACCESS_ID'),
             'access_key' => env('BCE_ACCESS_KEY'),
         ],
+        'sms' => [
+            'driver' => 'sms',
+            'access_id' => env('BCE_ACCESS_ID'),
+            'access_key' => env('BCE_ACCESS_KEY'),
+        ],
         'aip' => [//AIP自然语言处理
             'driver' => 'aip',
             'app_id' => env('AIP_APP_ID'),
