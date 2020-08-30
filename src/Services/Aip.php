@@ -144,4 +144,18 @@ class Aip extends BaseClient
     {
         return $this->post('/rest/2.0/solution/v1/video_censor/v2/user_defined', $params);
     }
+
+    /**
+     * 依存句法分析
+     * @param string $text 待分析文本，长度不超过256字节
+     * @param int $mode 模型选择。默认值为0，可选值mode=0（对应web模型）；mode=1（对应query模型）
+     * @return array
+     */
+    public function depparser($text, $mode = 1)
+    {
+        return $this->postJSON('/rpc/2.0/nlp/v1/depparser', [
+            'text' => $text,
+            'mode' => $mode
+        ]);
+    }
 }
