@@ -158,4 +158,21 @@ class Aip extends BaseClient
             'mode' => $mode
         ]);
     }
+
+    /**
+     * 分词
+     * @param string $text
+     * @return array
+     */
+    public function wordDepparser($text)
+    {
+        $words = $this->depparser($text);
+        $keywords = [];
+        if (isset($words['items'])) {
+            foreach ($words['items'] as $item) {
+                $keywords[] = $item['word'];
+            }
+        }
+        return $keywords;
+    }
 }
