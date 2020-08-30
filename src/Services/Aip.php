@@ -160,6 +160,30 @@ class Aip extends BaseClient
     }
 
     /**
+     * 词法分析
+     * @param string $text
+     * @return array
+     */
+    public function lexer($text)
+    {
+        return $this->postJSON('/rpc/2.0/nlp/v1/lexer', [
+            'text' => $text,
+        ]);
+    }
+
+    /**
+     * 词法分析定制版
+     * @param string $text
+     * @return array
+     */
+    public function lexerCustom($text)
+    {
+        return $this->postJSON('/rpc/2.0/nlp/v1/lexer_custom', [
+            'text' => $text,
+        ]);
+    }
+
+    /**
      * 分词
      * @param string $text
      * @return array
