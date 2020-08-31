@@ -188,14 +188,15 @@ class Aip extends BaseClient
      * @param string $text
      * @return array
      */
-    public function wordDepparser($text)
+    public function wordSegmentation($text)
     {
-        $words = $this->depparser($text);
+        $words = $this->lexer($text);
         $keywords = [];
-        if (isset($words['items'])) {
-            foreach ($words['items'] as $item) {
-                $keywords[] = $item['word'];
+        foreach ($words['items'] as $item) {
+            if (!empty($item['pos']) && in_array($item['pos'], ['v', 'vd', 'p', 'w', 'a', 'c', 'u', 'f', 'r'])) {
+                continue;
             }
+            $keywords[] = $item['item'];
         }
         return $keywords;
     }
