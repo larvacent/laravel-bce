@@ -192,11 +192,13 @@ class Aip extends BaseClient
     {
         $words = $this->lexer($text);
         $keywords = [];
-        foreach ($words['items'] as $item) {
-            if (!empty($item['pos']) && in_array($item['pos'], ['v', 'vd', 'p', 'w', 'a', 'c', 'u', 'f', 'r'])) {
-                continue;
+        if (isset($words['items']) && is_array($words['items'])) {
+            foreach ($words['items'] as $item) {
+                if (!empty($item['pos']) && in_array($item['pos'], ['v', 'vd', 'p', 'w', 'a', 'c', 'u', 'f', 'r'])) {
+                    continue;
+                }
+                $keywords[] = $item['item'];
             }
-            $keywords[] = $item['item'];
         }
         return $keywords;
     }
