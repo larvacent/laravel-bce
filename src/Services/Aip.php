@@ -49,12 +49,13 @@ class Aip extends BaseClient
     /**
      * 文章标签接口
      * @param string $title
-     * @param string $content
+     * @param null|string $content
      * @return array
      */
     public function keyword($title, $content = null)
     {
         if (!$content) $content = $title;
+        $content = strip_tags($content);
         return $this->postJSON('/rpc/2.0/nlp/v1/keyword', [
             'title' => $title,
             'content' => $content
@@ -64,10 +65,10 @@ class Aip extends BaseClient
     /**
      * 文章分类接口
      * @param string $title
-     * @param string $content
+     * @param null|string $content
      * @return array
      */
-    public function topic($title, $content)
+    public function topic($title, $content = null)
     {
         if (!$content) $content = $title;
         return $this->postJSON('/rpc/2.0/nlp/v1/topic', [
@@ -181,6 +182,26 @@ class Aip extends BaseClient
         return $this->postJSON('/rpc/2.0/nlp/v1/lexer_custom', [
             'text' => $text,
         ]);
+    }
+
+    /**
+     * 通过标题和内容获取标签
+     * @param string $title
+     * @param string $content
+     * @return array
+     */
+    public function tags($title, $content)
+    {
+        $words = $this->keyword($title, $content);
+        $tags = [];
+        if (isset($words['items']) && is_array($words['items'])) {
+            foreach ($words['items'] as $tag) {
+                if ($tag['score'] >= 0.7) {
+                    $tags[] = $tag['tag'];
+                }
+            }
+        }
+        return $tags;
     }
 
     /**
