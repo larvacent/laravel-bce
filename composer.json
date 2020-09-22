@@ -16,7 +16,7 @@
         "illuminate/support": "^5.0 || ^6.0 || ^7.0 || ^8.0",
         "illuminate/bus": "^5.0 || ^6.0 || ^7.0 || ^8.0",
         "illuminate/queue": "^5.0 || ^6.0 || ^7.0 || ^8.0",
-        "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/guzzle": "^6.5",
         "larva/supports": "^2.0"
     },
     "autoload": {
