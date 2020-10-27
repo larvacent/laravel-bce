@@ -196,7 +196,7 @@ class Aip extends BaseClient
         $tags = [];
         if (isset($words['items']) && is_array($words['items'])) {
             foreach ($words['items'] as $tag) {
-                if ($tag['score'] >= 0.7) {
+                if ($tag['score'] >= 0.7 && mb_strlen($tag['tag'] > 1)) {
                     $tags[] = $tag['tag'];
                 }
             }
