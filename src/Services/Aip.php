@@ -215,7 +215,7 @@ class Aip extends BaseClient
         $keywords = [];
         if (isset($words['items']) && is_array($words['items'])) {
             foreach ($words['items'] as $item) {
-                if (!empty($item['pos']) && in_array($item['pos'], ['v', 'vd', 'p', 'w', 'a', 'c', 'u', 'f', 'r'])) {
+                if (!empty($item['pos']) && in_array($item['pos'], ['v', 'vd', 'p', 'w', 'a', 'c', 'u', 'f', 'r']) && mb_strlen($item['item'] > 1)) {
                     continue;
                 }
                 $keywords[] = $item['item'];
