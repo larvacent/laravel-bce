@@ -171,4 +171,5 @@ class BceManage
     {
         return new Services\Aip(['accessId' => $config['app_id'], 'accessKey' => $config['app_key'], 'secretKey' => $config['secret_key']]);
     }
+
 }

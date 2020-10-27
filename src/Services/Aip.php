@@ -185,6 +185,18 @@ class Aip extends BaseClient
     }
 
     /**
+     * 热点发现
+     * @param string $domain
+     * @return array
+     */
+    public function hotList($domain)
+    {
+        return $this->postJSON('/rpc/2.0/creation/v1/hot_list/domain', [
+            'domain' => $domain,
+        ]);
+    }
+
+    /**
      * 通过标题和内容获取标签
      * @param string $title
      * @param string $content
