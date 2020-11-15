@@ -21,11 +21,18 @@ return [
             'access_id' => env('BCE_ACCESS_ID'),
             'access_key' => env('BCE_ACCESS_KEY'),
         ],
-        'aip' => [//AIP自然语言处理
+        'aip' => [//AI自然语言处理(旧)
             'driver' => 'aip',
-            'app_id' => env('AIP_APP_ID'),
-            'app_key' => env('AIP_APP_KEY'),
-            'secret_key' => env('AIP_SECRET_KEY'),
+            'app_id' => env('AI_APP_ID'),
+            'app_key' => env('AI_APP_KEY'),
+            'secret_key' => env('AI_SECRET_KEY'),
+        ],
+
+        'nlp' => [//NLP 自然语言处理
+            'driver' => 'aip',
+            'app_id' => env('NLP_APP_ID'),
+            'app_key' => env('NLP_APP_KEY'),
+            'secret_key' => env('NLP_SECRET_KEY'),
         ],
     ],
 

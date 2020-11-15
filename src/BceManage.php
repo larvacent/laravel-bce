@@ -172,4 +172,13 @@ class BceManage
         return new Services\Aip(['accessId' => $config['app_id'], 'accessKey' => $config['app_key'], 'secretKey' => $config['secret_key']]);
     }
 
+    /**
+     * 创建 NLP 服务
+     * @param array $config
+     * @return Services\Nlp
+     */
+    public function createNlpService(array $config)
+    {
+        return new Services\Nlp(['accessId' => $config['app_id'], 'accessKey' => $config['app_key'], 'secretKey' => $config['secret_key']]);
+    }
 }
