@@ -403,4 +403,24 @@ class Nlp extends BaseClient
             'extra_config' => $extraConfig
         ]);
     }
+
+    /**
+     * 关键词提取
+     * @param string $title 标题
+     * @param string|null $content 内容可为空
+     * @return array
+     */
+    public function keywords($title, $content = null)
+    {
+        $words = $this->keywordsExtraction($title, $content);
+        $keywords = [];
+        if (isset($words['items']) && is_array($words['items'])) {
+            foreach ($words['items'] as $tag) {
+                if ($tag['score'] >= 0.7 && mb_strlen($tag['tag'] > 1)) {
+                    $keywords[] = $tag['tag'];
+                }
+            }
+        }
+        return $keywords;
+    }
 }
