@@ -39,8 +39,16 @@ This service provider must be registered.
 
 ```php
 try {
-	$cdn = Bce::get('cdn');
+	$cdn = \Larva\Baidu\Cloud\Bce::get('cdn');
 	
+} catch (\Exception $e) {
+	print_r($e->getMessage());
+}
+
+try {
+	$nlp = \Larva\Baidu\Cloud\Bce::get('nlp');
+	$tags = $nlp->keywords('标题','内容');
+    print_r($tags);
 } catch (\Exception $e) {
 	print_r($e->getMessage());
 }
