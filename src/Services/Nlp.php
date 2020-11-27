@@ -9,6 +9,7 @@
 namespace Larva\Baidu\Cloud\Services;
 
 use GuzzleHttp\HandlerStack;
+use Illuminate\Support\Facades\URL;
 use Larva\Baidu\Cloud\AipStack;
 use Larva\Baidu\Cloud\BaseClient;
 
@@ -422,5 +423,67 @@ class Nlp extends BaseClient
             }
         }
         return $keywords;
+    }
+
+    //内容审核
+
+    /**
+     * 文本审核
+     * @param string $text
+     * @return array
+     */
+    public function textCensor($text)
+    {
+        return $this->post('/rest/2.0/solution/v1/text_censor/v2/user_defined?charset=UTF-8', [
+            'text' => $text,
+        ]);
+    }
+
+    /**
+     * 图片审核
+     * @param string $image 待审核图像Base64编码字符串或者图像的Url地址
+     * @param int $imgType 图片类型0:静态图片（PNG、JPG、JPEG、BMP、GIF（仅对首帧进行审核）、Webp、TIFF），1:GIF动态图片
+     * @return array
+     */
+    public function imageCensor($image, $imgType = 0)
+    {
+        if (!URL::isValidUrl($image)) {
+            $data = ['image' => $image, 'imgType' => $imgType];
+        } else {
+            $data = ['imgUrl' => $image, 'imgType' => $imgType];
+        }
+        return $this->post('/rest/2.0/solution/v1/img_censor/v2/user_defined?charset=UTF-8', $data);
+    }
+
+    /**
+     * 语音审核
+     * @param string $voice
+     * @param string $fmt 语音文件格式
+     * @param boolean $rawText 是否返回语音识别结果 true:是;false:否
+     * @param boolean $split true:拆句;false:不拆句返回整段文本
+     * @return array
+     */
+    public function voiceCensor($voice, $fmt, $rawText = true, $split = false)
+    {
+        if (!URL::isValidUrl($voice)) {
+            $data = ['base64' => $voice, 'fmt' => $fmt, 'rawText' => $rawText, 'split' => $split];
+        } else {
+            $data = ['url' => $voice, 'fmt' => $fmt, 'rawText' => $rawText, 'split' => $split];
+        }
+        return $this->post('/rest/2.0/solution/v1/voice_censor/v2/user_defined?charset=UTF-8', $data);
+    }
+
+    /**
+     * 视频审核
+     * @param string $name 视频名称
+     * @param string $videoUrl 视频Url
+     * @param mixed $extId 本地视频ID
+     * @return array
+     */
+    public function videoCensor($name, $videoUrl, $extId)
+    {
+        return $this->post('/rest/2.0/solution/v1/video_censor/v2/user_defined?charset=UTF-8', [
+            'name' => $name, 'videoUrl' => $videoUrl, 'extId' => $extId
+        ]);
     }
 }
