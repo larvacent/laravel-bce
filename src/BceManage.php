@@ -163,16 +163,6 @@ class BceManage
     }
 
     /**
-     * 创建AIP服务
-     * @param array $config
-     * @return Services\Aip
-     */
-    public function createAipService(array $config)
-    {
-        return new Services\Aip(['accessId' => $config['app_id'], 'accessKey' => $config['app_key'], 'secretKey' => $config['secret_key']]);
-    }
-
-    /**
      * 创建 NLP 服务
      * @param array $config
      * @return Services\Nlp

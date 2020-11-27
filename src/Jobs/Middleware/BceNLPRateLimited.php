@@ -11,10 +11,10 @@ namespace Larva\Baidu\Cloud\Jobs\Middleware;
 use Illuminate\Support\Facades\Redis;
 
 /**
- * 百度分词限速
+ * 百度NLP分词限速
  * @author Tongle Xu <xutongle@gmail.com>
  */
-class BceAIPRateLimited
+class BceNLPRateLimited
 {
     /** @var int QPS */
     protected $qps = 5;
