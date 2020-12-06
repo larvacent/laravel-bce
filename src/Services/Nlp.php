@@ -10,7 +10,7 @@ namespace Larva\Baidu\Cloud\Services;
 
 use GuzzleHttp\HandlerStack;
 use Illuminate\Support\Facades\URL;
-use Larva\Baidu\Cloud\AipStack;
+use Larva\Baidu\Cloud\NlpStack;
 use Larva\Baidu\Cloud\BaseClient;
 
 /**
@@ -38,7 +38,7 @@ class Nlp extends BaseClient
     public function getHttpStack()
     {
         $stack = HandlerStack::create();
-        $middleware = new AipStack([
+        $middleware = new NlpStack([
             'appid' => $this->accessId,
             'apiKey' => $this->accessKey,
             'secretKey' => $this->secretKey

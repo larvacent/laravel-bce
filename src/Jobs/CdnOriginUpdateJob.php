@@ -14,7 +14,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Cache;
 use Larva\Baidu\Cloud\Bce;
-use Larva\Baidu\Cloud\Services\Cdn;
 
 /**
  * 更新CDN 源站配置

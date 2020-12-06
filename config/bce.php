@@ -22,7 +22,7 @@ return [
             'access_key' => env('BCE_ACCESS_KEY'),
         ],
         'nlp' => [//NLP 自然语言处理
-            'driver' => 'aip',
+            'driver' => 'nlp',
             'app_id' => env('NLP_APP_ID'),
             'app_key' => env('NLP_APP_KEY'),
             'secret_key' => env('NLP_SECRET_KEY'),

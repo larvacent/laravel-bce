@@ -28,7 +28,7 @@ class BceNLPRateLimited
      */
     public function handle($job, $next)
     {
-        Redis::throttle('bce_aip')->allow($this->qps)->every(1)
+        Redis::throttle('bce_nlp')->allow($this->qps)->every(1)
             ->then(function () use ($job, $next) {
                 // 获得锁，执行任务
                 $next($job);
