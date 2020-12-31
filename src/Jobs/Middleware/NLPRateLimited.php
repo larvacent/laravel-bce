@@ -11,13 +11,13 @@ namespace Larva\Baidu\Cloud\Jobs\Middleware;
 use Illuminate\Support\Facades\Redis;
 
 /**
- * 百度NLP分词限速
+ * 百度NLP限速
  * @author Tongle Xu <xutongle@gmail.com>
  */
-class BceNLPRateLimited
+class NLPRateLimited
 {
     /** @var int QPS */
-    protected $qps = 5;
+    protected $qps = 3;
 
     /**
      * 处理队列任务
@@ -34,7 +34,7 @@ class BceNLPRateLimited
                 $next($job);
             }, function () use ($job) {
                 // 无法获得锁
-                $job->release(5);
+                $job->release(50);
             });
     }
 }
