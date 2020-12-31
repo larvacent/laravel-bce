@@ -106,7 +106,8 @@ class BaseClient implements BceInterface
             'base_uri' => $this->getBaseUri(),
             'timeout' => $this->timeout,
             'handler' => $this->getHttpStack(),
-            'verify' => false
+            'verify' => false,
+            'force_ip_resolve' => 'v4'
         ];
     }
 
