@@ -66,9 +66,10 @@ class CdnRefreshObjectCachesJob implements ShouldQueue
     {
         try {
             $tasks = [];
-            foreach ($tasks as $task) {
+            foreach ($this->urls as $task) {
                 $tasks[] = [
-                    'url' => $task
+                    'url' => $task,
+                    'type' => $this->objectType
                 ];
             }
             /** @var Cdn $cdn */
