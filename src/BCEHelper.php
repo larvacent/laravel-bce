@@ -24,4 +24,24 @@ class BCEHelper
     {
         return \Larva\Baidu\Cloud\Bce::get('nlp')->keywords($title, $content);
     }
+
+    /**
+     * 词法分析
+     * @param string $text
+     * @return array
+     */
+    public static function keywordsExtraction2($text)
+    {
+        $words = \Larva\Baidu\Cloud\Bce::get('nlp')->lexicalAnalysis($text);
+        $keywords = [];
+        if (isset($words['items']) && is_array($words['items'])) {
+            foreach ($words['items'] as $item) {
+                if (!empty($item['pos']) && in_array($item['pos'], ['v', 'vd', 'p', 'w', 'a', 'c', 'u', 'f', 'r']) && mb_strlen($item['item'] > 1)) {
+                    continue;
+                }
+                $keywords[] = $item['item'];
+            }
+        }
+        return $keywords;
+    }
 }
