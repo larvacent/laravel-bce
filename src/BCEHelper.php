@@ -36,7 +36,7 @@ class BCEHelper
         $keywords = [];
         if (isset($words['items']) && is_array($words['items'])) {
             foreach ($words['items'] as $item) {
-                if (!empty($item['pos']) && in_array($item['pos'], ['v', 'vd', 'p', 'w', 'a', 'c', 'u', 'f', 'r']) && mb_strlen($item['item'] > 1)) {
+                if ((!empty($item['pos']) && in_array($item['pos'], ['a', 'm', 'c', 'f', 'v', 'ad', 'q', 'u', 'vd', 'an', 'f', 'xc', 't', 'vn', 'd', 'p', 'w'])) || mb_strlen($item['item']) < 2) {
                     continue;
                 }
                 $keywords[] = $item['item'];
